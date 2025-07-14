@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
+
+import androidx.lifecycle.MutableLiveData
 import com.creativeitinstitute.maadbootcampproject1.R
 import com.creativeitinstitute.maadbootcampproject1.databinding.FragmentAddTaskBinding
+import com.creativeitinstitute.maadbootcampproject1.utils.showChar
 import com.creativeitinstitute.maadbootcampproject1.utils.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -29,15 +33,35 @@ class AddTaskFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this.viewLifecycleOwner
 
-
+        addTask()
 
         return binding.root
+    }
+
+    private fun addTask() {
+        binding.saveTaskBtn.setOnClickListener {
+            val title = binding.addTaskTitleEdt.text.toString().trim()
+            val description = binding.addTaskDescriptionEdt.text.toString().trim()
+
+            viewModel.saveTask()
+
+        }
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         bindSnackBar(view)
+        bindUiMessage()
+    }
+
+    private fun bindUiMessage() {
+
+        binding.warningTextTaskTitle.showChar(viewLifecycleOwner, viewModel.title)
+        binding.warningTextTaskDescription.showChar(viewLifecycleOwner, viewModel.description)
+
     }
 
     private fun bindSnackBar(view: View) {
@@ -50,3 +74,4 @@ class AddTaskFragment : Fragment() {
 
     }
 }
+
